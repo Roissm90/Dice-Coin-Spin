@@ -372,7 +372,7 @@ function spinTheWheel() {
 
   if (!personsDice) return;
 
-  if (message.innerHTML === "* Please enter a name *") {
+  if (message.innerHTML === "* Please enter a name *" || "* This name already exists *") {
     message.innerHTML = "";
   }
   const fullSpins = 10 * 360;
