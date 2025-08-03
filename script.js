@@ -383,6 +383,7 @@ function spinTheWheel() {
 
   personsDice.style.transition = "transform 5s ease-in-out";
   personsDice.style.transform = `rotate(${currentRotation}deg)`;
+  console.log('spinning')
 }
 
 function removeNames() {
@@ -407,6 +408,8 @@ function removeNames() {
     const existingLines = personsDice.querySelector(".divider-lines");
     if (existingLines) existingLines.remove();
     personsDice.style.transform = 'rotate(0deg)';
+    personsDice.style.transition = 'transform 0s ease-in-out'
+    currentRotation = 0;
   }
 
   const spinBtn = document.getElementById("spinWheel");
