@@ -406,6 +406,7 @@ function removeNames() {
 
     const existingLines = personsDice.querySelector(".divider-lines");
     if (existingLines) existingLines.remove();
+    personsDice.style.transform = 'rotate(0deg)';
   }
 
   const spinBtn = document.getElementById("spinWheel");
