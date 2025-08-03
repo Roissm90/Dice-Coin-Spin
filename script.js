@@ -1,7 +1,7 @@
 // Inicia la app al cargar
 window.addEventListener("DOMContentLoaded", () => {
   localStorage.clear();
-  data.Persons = [];
+  data.Spin = [];
   initApp();
 });
 
@@ -15,7 +15,7 @@ const data = {
     Tail: "Tail",
   },
 
-  Persons: JSON.parse(localStorage.getItem("personsList")) || [],
+  Spin: JSON.parse(localStorage.getItem("personsList")) || [],
 };
 
 const numberToWord = [
@@ -41,7 +41,7 @@ function initApp() {
   //Simular la aparición de cualquiera
   handleTypeSelection("Dice");
   //handleTypeSelection("Coin");
-  //handleTypeSelection("Persons");
+  //handleTypeSelection("Spin");
 }
 
 // Renderiza los tipos de dados
@@ -86,7 +86,7 @@ function handleTypeSelection(type) {
     renderHeadsOrTails(wrapperDie);
   }
 
-  if (type === "Persons") {
+  if (type === "Spin") {
     renderPersonInput(wrapperOptions);
     renderPersonsContainer(wrapperDie);
     renderExistingPersons();
@@ -204,13 +204,12 @@ function renderPersonsContainer(container) {
   container.appendChild(scaleWrapper);
 }
 
-
 // Renderiza personas desde localStorage
 function renderExistingPersons() {
   const personsDice = document.getElementById("personsDice");
   personsDice.innerHTML = "";
 
-  data.Persons.forEach((name) => {
+  data.Spin.forEach((name) => {
     const person = createPersonElement(name);
     personsDice.appendChild(person);
   });
@@ -232,7 +231,7 @@ function addPerson(name) {
   const personsDice = document.getElementById("personsDice");
   const message = document.getElementById("message");
 
-  if (data.Persons.length >= 8) {
+  if (data.Spin.length >= 8) {
     if (message) message.innerHTML = "No more names are allowed";
     const btn = document.getElementById("btnAdd");
     if (btn) btn.style.pointerEvents = "none";
@@ -244,13 +243,13 @@ function addPerson(name) {
     return;
   }
 
-  if (data.Persons.includes(name)) {
-    if (message) message.innerHTML = "This name already exists";
+  if (data.Spin.includes(name)) {
+    if (message) message.innerHTML = "* This name already exists *";
     return;
   }
 
-  data.Persons.push(name);
-  localStorage.setItem("personsList", JSON.stringify(data.Persons));
+  data.Spin.push(name);
+  localStorage.setItem("personsList", JSON.stringify(data.Spin));
 
   const person = createPersonElement(name);
   personsDice.appendChild(person);
@@ -272,7 +271,7 @@ function createPersonElement(name) {
 // Actualiza layout de personas
 function updatePersonsVisual() {
   const personsDice = document.getElementById("personsDice");
-  const count = data.Persons.length;
+  const count = data.Spin.length;
 
   personsDice.setAttribute("data-number-persons", count);
   numberToWord.forEach((word) => personsDice.classList.remove(word));
@@ -292,7 +291,16 @@ function positionPersons() {
   const persons = personsDice.querySelectorAll(".person");
   const total = persons.length;
   const radius = personsDice.offsetWidth * 0.3;
-  const classNames = ["one", "two", "three", "four", "five", "six", "seven", "eight"];
+  const classNames = [
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+  ];
 
   persons.forEach((el, index) => {
     const angle = (360 / total) * index;
@@ -307,7 +315,7 @@ function renderDividers() {
   const existingLines = document.querySelector(".divider-lines");
   if (existingLines) existingLines.remove();
 
-  const total = data.Persons.length;
+  const total = data.Spin.length;
   if (total < 2) return;
 
   const dividerWrapper = document.createElement("div");
@@ -328,7 +336,7 @@ function renderDividers() {
 function maybeAddSpinButton() {
   const personsDice = document.getElementById("personsDice");
   const wrapperDie = document.getElementById("wrapperDie");
-  const count = data.Persons.length;
+  const count = data.Spin.length;
   const existingButton = document.getElementById("spinWheel");
 
   const selectorWheel = document.createElement("div");
@@ -360,8 +368,13 @@ function maybeAddSpinButton() {
 let currentRotation = 0;
 function spinTheWheel() {
   const personsDice = document.getElementById("personsDice");
+  const message = document.getElementById("message");
+
   if (!personsDice) return;
 
+  if (message.innerHTML === "* Please enter a name *") {
+    message.innerHTML = "";
+  }
   const fullSpins = 10 * 360;
   const randomAngle = Math.floor(Math.random() * 360);
   const spinAmount = fullSpins + randomAngle;
@@ -375,15 +388,21 @@ function spinTheWheel() {
 function removeNames() {
   const personsDice = document.getElementById("personsDice");
   const wrapperDie = document.getElementById("wrapperDie");
+  const message = document.getElementById("message");
+  const addBtn = document.getElementById("btnAdd");
 
-  data.Persons = [];
-  localStorage.removeItem("personsList");
+  data.Spin = [];
+  localStorage.clear();
+
+  message.innerHTML = "";
+
+  addBtn.style.pointerEvents = "auto";
 
   if (personsDice) {
     personsDice.innerHTML = "";
     personsDice.removeAttribute("data-number-persons");
 
-    numberToWord.forEach(word => personsDice.classList.remove(word));
+    numberToWord.forEach((word) => personsDice.classList.remove(word));
 
     const existingLines = personsDice.querySelector(".divider-lines");
     if (existingLines) existingLines.remove();
