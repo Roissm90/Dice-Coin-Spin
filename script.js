@@ -189,6 +189,14 @@ function renderPersonInput(container) {
     <button class="btn-add" onclick="addPersonFromInput('nameInput')" id="btnAdd"><span>Add</span></button>
   `;
   container.appendChild(wrapper);
+
+  const input = wrapper.querySelector("#nameInput");
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addPersonFromInput("nameInput"); 
+    }
+  });
 }
 
 // Renderiza el contenedor de personas
